@@ -1,0 +1,4 @@
+Create tables in mysql
+1)emp_data-name ,time ,op,S_done
+2)users-id, username, password, shift
+3)park-num ,type ,time ,date ,mob
