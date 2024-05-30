@@ -23,7 +23,7 @@ The Parking Space Manager is a web-based application designed to efficiently man
 
 3. **Database:**
    - A relational database (e.g., MySQL) used to store user information, parking spaces, reservations, and logs.
-   - Tables include Users, ParkingSpaces, Reservations, and Admins.
+   - Tables include Users, ParkingSpaces, Employee Data.
 
 #### Conclusion
 The Parking Space Manager project is a comprehensive solution for managing parking spaces efficiently. By leveraging Java, JSP, HTML, and CSS, SQL the application provides a robust and user-friendly platform for both users and administrators. This project demonstrates the integration of backend and frontend technologies to create a functional and aesthetically pleasing web application.
