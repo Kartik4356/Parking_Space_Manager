@@ -1,30 +1,39 @@
-### Project Title: Parking Space Manager
+# Parking Space Manager 🚗☁️
 
-#### Overview
-The Parking Space Manager is a web-based application designed to efficiently manage parking spaces in a parking lot. This system allows users to view available parking spaces, book a spot, and manage their reservations. It also provides administrators with tools to monitor and manage the overall parking lot usage.
+A full-stack, cloud-native web application designed to efficiently manage parking lot operations. This system streamlines parking space allocation, tracks vehicle entries and exits in real-time, manages employee shifts, and enforces role-based access control.
 
-#### Technologies Used
-- **Java:** Used for the backend logic, handling business operations, and database interactions.
-- **JSP (JavaServer Pages):** Used for creating dynamic web pages and serving content to the client.
-- **HTML:** Used to structure the web pages.
-- **CSS:** Used for styling the web pages to ensure a user-friendly and visually appealing interface.
-- **SQL:** Used for creating database and store data.
 
-#### Implementation Details
-1. **Backend:**
-   - Developed using Java Servlets to handle requests and responses.
-   - Business logic encapsulated in Java classes.
-   - JDBC used for database connectivity and operations.
 
-2. **Frontend:**
-   - HTML used to create the structure of the web pages.
-   - CSS for styling the pages, ensuring a consistent look and feel across the application.
-   - JSP used to integrate Java code with HTML, allowing dynamic content generation.
+## 🛠️ Tech Stack & Architecture
 
-3. **Database:**
-   - A relational database (e.g., MySQL) used to store user information, parking spaces, reservations, and logs.
-   - Tables include Users, ParkingSpaces, Employee Data.
+**Cloud Infrastructure:**
+* **AWS EC2:** Hosts the Java application and Apache Tomcat web server for high availability and scalability.
+* **AWS RDS:** Managed relational database service ensuring secure, automated, and reliable data storage.
 
-#### Conclusion
-The Parking Space Manager project is a comprehensive solution for managing parking spaces efficiently. By leveraging Java, JSP, HTML, and CSS, SQL the application provides a robust and user-friendly platform for both users and administrators. This project demonstrates the integration of backend and frontend technologies to create a functional and aesthetically pleasing web application.
+**Application Layer:**
+* **Backend:** Java (Servlets, JDBC) for robust server-side business logic and secure database interactions.
+* **Frontend:** JSP (JavaServer Pages), HTML5, and CSS3 for a dynamic, responsive, and intuitive user interface.
+* **Database:** SQL (MySQL/Oracle) with optimized schemas for tracking vehicles, employees, and session logs.
 
+## ✨ Key Features
+
+* **Real-Time Dashboard:** Dynamically calculates and displays the live capacity of Two-Wheeler and Four-Wheeler vehicles in the parking lot.
+* **Automated Vehicle Logging:** Securely captures vehicle entry/exit times, owner contact details, and automatically generates accurate timestamps.
+* **Employee Management & Security:** Tracks employee shifts, monitors login/logout sessions, and records the exact number of entries processed per employee session.
+* **Cloud-First Security:** Database credentials and sensitive configurations are strictly decoupled from the codebase using secure server environment variables.
+
+## 🚀 Cloud Deployment (AWS)
+
+This application is engineered for deployment on Amazon Web Services. The local development environment has been fully migrated to a cloud architecture:
+
+1. **Database:** The relational database is hosted on **Amazon RDS**, replacing local `localhost` connections with secure cloud endpoints.
+2. **Web Server:** The compiled `.war` file is deployed onto an **Amazon EC2** Ubuntu instance running Apache Tomcat 9.
+3. **Infrastructure as Code:** The repository includes an `ec2_setup.sh` script to automate the configuration of the Linux environment, install dependencies (Java, Tomcat), and securely inject AWS RDS credentials into the server environment.
+
+## ⚙️ Local Setup & Installation
+
+To run this project locally for development or testing:
+
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/Kartik4356/Parking_Space_Manager.git](https://github.com/Kartik4356/Parking_Space_Manager.git)
