@@ -36,4 +36,4 @@ To run this project locally for development or testing:
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/Kartik4356/Parking_Space_Manager.git](https://github.com/Kartik4356/Parking_Space_Manager.git)
+   git clone https://github.com/Kartik4356/Parking_Space_Manager.git
