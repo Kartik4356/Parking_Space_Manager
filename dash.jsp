@@ -27,7 +27,6 @@ button {
 </head>
 <body>
 
-
 <form  action="" method="post">
    <div id="min">
     Car number : <input type="text" name="num" placeholder="XX-12-XX-4685" required pattern="[A-Z]{2}-[0-9]{2}-[A-Z]{2}-[0-9]{4}" ><br><br>
@@ -36,14 +35,22 @@ button {
     </div>
 </form>
 
-
 <%
-		if (request.getMethod().equalsIgnoreCase("post")) {
+        if (request.getMethod().equalsIgnoreCase("post")) {
         String num = request.getParameter("num");
        
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/adlab", "root", "");
+            
+            String dbUrl = System.getenv("RDS_DB_URL");
+            String dbUser = System.getenv("RDS_DB_USER");
+            String dbPassword = System.getenv("RDS_DB_PASS");
+
+            if (dbUrl == null || dbUser == null || dbPassword == null) {
+                throw new RuntimeException("Missing database environment variables! Check RDS_DB_URL, RDS_DB_USER, RDS_DB_PASS.");
+            }
+
+            Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 
             String query = "DELETE FROM park WHERE num = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -51,29 +58,27 @@ button {
            
             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected > 0) {
-            	%>
-            	<script type="text/javascript">
+                %>
+                <script type="text/javascript">
                 alert("Vehicle Removed successfully!");
              </script>
              <%
-            	 } else {
-            		 %>
-            		 <script type="text/javascript">
-                     alert("No such vehicle found!!");
-                  </script>
-                  <%
-            	 }
+                 } else {
+                     %>
+                     <script type="text/javascript">
+                         alert("No such vehicle found!!");
+                      </script>
+                      <%
+                 }
 
             preparedStatement.close();
             connection.close();
         } catch (Exception e) {
-        	out.println("Error: " + e.getMessage()); }
-		}
+            out.println("Error: " + e.getMessage()); 
+        }
+        }
     
 %>
 
-
-
 </body>
 </html>
->
