@@ -5,8 +5,7 @@
     <title>Data Entry Form</title>
     <style type="text/css">
     
-    h1{
-     
+    h1 {
     margin: 0 auto;
     padding: 20px;
     background-color: rgba(255, 255, 255, 0.53);
@@ -14,6 +13,7 @@
     border-radius: 5px;
     margin-top: 10px; 
     }
+    
     #min {
     max-width: 400px;
     margin: 0 auto;
@@ -22,10 +22,10 @@
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     margin-top: 100px; 
-}
+    }
 
-	#tb { 
-	max-width: 155px;
+    #tb { 
+    max-width: 155px;
     margin: 0 auto;
     padding: 20px;
     background-color: #fff;
@@ -33,18 +33,15 @@
     border-radius: 5px;
     margin-top: 105px; 
     text-align: center;
-}
+    }
 
-	}
-button {
+    button {
     color: black;
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
     text-align: center;
     }
-    
-   
     
     </style>
 </head>
@@ -60,14 +57,22 @@ button {
     </div>
 </form>
 
-
 <%
-		if (request.getMethod().equalsIgnoreCase("post")) {
+        if (request.getMethod().equalsIgnoreCase("post")) {
         String nam = request.getParameter("name");
        
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/adlab", "root", "");
+            
+            String dbUrl = System.getenv("RDS_DB_URL");
+            String dbUser = System.getenv("RDS_DB_USER");
+            String dbPassword = System.getenv("RDS_DB_PASS");
+
+            if (dbUrl == null || dbUser == null || dbPassword == null) {
+                throw new RuntimeException("Missing database environment variables! Check RDS_DB_URL, RDS_DB_USER, RDS_DB_PASS.");
+            }
+
+            Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 
             String query = "SELECT * FROM emp_data WHERE name=?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -90,18 +95,18 @@ button {
 
                 out.println("</table></div>");
             } else { %>
-<script type="text/javascript">
+            <script type="text/javascript">
                 alert("User not found");
-             </script>           <% }
+             </script>            
+             <% }
             resultSet.close();
             preparedStatement.close();
             connection.close();
         } catch (SQLException e) {
-        	out.println("Error: " + e.getMessage()); }
-		}
+            out.println("Error: " + e.getMessage()); }
+        }
     
 %>
-
 
 </body>
 </html>

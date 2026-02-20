@@ -45,8 +45,9 @@ button {
 </form>
 
 
+
 <%
-		if (request.getMethod().equalsIgnoreCase("post")) {
+        if (request.getMethod().equalsIgnoreCase("post")) {
         String num = request.getParameter("num");
         String type = request.getParameter("type");
         String time = request.getParameter("time");
@@ -55,7 +56,16 @@ button {
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/adlab", "root", "");
+            
+            String dbUrl = System.getenv("RDS_DB_URL");
+            String dbUser = System.getenv("RDS_DB_USER");
+            String dbPassword = System.getenv("RDS_DB_PASS");
+
+            if (dbUrl == null || dbUser == null || dbPassword == null) {
+                throw new RuntimeException("Missing database environment variables! Check RDS_DB_URL, RDS_DB_USER, RDS_DB_PASS.");
+            }
+
+            Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 
             String query = "INSERT INTO park (num,type,time,date,mob) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -76,28 +86,28 @@ button {
             }
             session.setAttribute("entryCount", entryCount);
             if (rowsAffected > 0) {
-            	%>
-            	<script type="text/javascript">
+                %>
+                <script type="text/javascript">
                 alert("Vehicle entered successfully!");
              </script>
              <%
-            	 } else {
-            		 %>
-            		 <script type="text/javascript">
-                     alert("Error while entering data!! Check format");
-                  </script>
-                  <%
-            	 }
+                 } else {
+                     %>
+                     <script type="text/javascript">
+                         alert("Error while entering data!! Check format");
+                      </script>
+                      <%
+                 }
 
             preparedStatement.close();
             connection.close();
         } catch (Exception e) {
-        	%>
-        	 <script type="text/javascript">
+            %>
+             <script type="text/javascript">
              alert("Error while entering data!!");
           </script>  
           <%      }
-		}
+        }
     
 %>
 

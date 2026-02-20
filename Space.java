@@ -1,5 +1,3 @@
-
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
@@ -15,75 +13,65 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/Space")
 public class Space extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public Space() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		 response.setContentType("text/html");
-	        PrintWriter out = response.getWriter();
-	        out.println("<html><head><title>Display Data</title><style>"
-	        		+ "#tib{max-width: 400px;\r\n"
-	        		+ "    margin: 0 auto;\r\n"
-	        		+ "    padding: 20px;\r\n"
-	        		+ "    background-color: rgba(255, 255, 255, 0.9);\r\n"
-	        		+ "    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);\r\n"
-	        		+ "    border-radius: 5px;\r\n"
-	        		+ "    margin-top: 100px; }</style></head><body>");
+    private Connection getDBConnection() throws SQLException, ClassNotFoundException {
+        String dbUrl = System.getenv("RDS_DB_URL");
+        String dbUser = System.getenv("RDS_DB_USER");
+        String dbPassword = System.getenv("RDS_DB_PASS");
 
-	        
+        if (dbUrl == null || dbUser == null || dbPassword == null) {
+            throw new RuntimeException("Missing database environment variables! Check RDS_DB_URL, RDS_DB_USER, RDS_DB_PASS.");
+        }
 
-	        try {
-	           
-	            Class.forName("com.mysql.cj.jdbc.Driver");
-	            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/adlab", "root", "");
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        return DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+    }
 
-	           Statement statement = connection.createStatement();
-	           ResultSet resultSet = statement.executeQuery("SELECT * FROM park");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+         response.setContentType("text/html");
+         PrintWriter out = response.getWriter();
+         out.println("<html><head><title>Display Data</title><style>"
+                + "#tib{max-width: 400px;\r\n"
+                + "    margin: 0 auto;\r\n"
+                + "    padding: 20px;\r\n"
+                + "    background-color: rgba(255, 255, 255, 0.9);\r\n"
+                + "    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);\r\n"
+                + "    border-radius: 5px;\r\n"
+                + "    margin-top: 100px; }</style></head><body>");
 
-	            out.println("<div id='tib'><table border='1'><tr><th>Car NO</th><th> Category</th><th>Time</th><th>Date</th><th>Mobile NO</th></tr>");
+        try (Connection connection = getDBConnection()) {
+            
+            try (Statement statement = connection.createStatement();
+                 ResultSet resultSet = statement.executeQuery("SELECT * FROM park")) {
 
-	            while (resultSet.next()) {
-	                String id = resultSet.getString("num");
-	                String type = resultSet.getString("type");
-	                String time = resultSet.getString("time"); 
-	                String date = resultSet.getString("date");
-	                int mobi = resultSet.getInt("mob");
+                out.println("<div id='tib'><table border='1'><tr><th>Car NO</th><th> Category</th><th>Time</th><th>Date</th><th>Mobile NO</th></tr>");
 
-	                out.println("<tr><td>" + id + "</td><td>" + type + "</td><td>" + time + "</td><td>" + date + "</td><td>" + mobi + "</td></tr>");
-	            }
+                while (resultSet.next()) {
+                    String id = resultSet.getString("num");
+                    String type = resultSet.getString("type");
+                    String time = resultSet.getString("time"); 
+                    String date = resultSet.getString("date");
+                    String mobi = resultSet.getString("mob"); 
 
-	            out.println("</table></div>");
-	            resultSet.close();
-	            statement.close();
-	            connection.close();
-	        } catch (Exception e) {
-	            out.println("<p>Error: " + e.getMessage() + "</p>");
-	            e.printStackTrace();
-	        } finally {
-	            
-	        	
-	        }
+                    out.println("<tr><td>" + id + "</td><td>" + type + "</td><td>" + time + "</td><td>" + date + "</td><td>" + mobi + "</td></tr>");
+                }
 
-	        out.println("</body></html>");
-	    }	
+                out.println("</table></div>");
+            }
+        } catch (Exception e) {
+            out.println("<p>Error: " + e.getMessage() + "</p>");
+            e.printStackTrace();
+        } 
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
+        out.println("</body></html>");
+    }    
 
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doGet(request, response);
+    }
 }
